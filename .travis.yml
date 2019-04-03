@@ -4,6 +4,8 @@ cache: false
 env:
 - URL=https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
 before_install:
+# Installs the Salesforce CLI in the Travis CI VMs
+# Initiates the JWT bearer token flow
 - openssl aes-256-cbc -K $encrypted_6544e2f651fc_key -iv $encrypted_6544e2f651fc_iv
   -in assets/server.key.enc -out assets/server.key -d
 - export SFDX_AUTOUPDATE_DISABLE=false
@@ -16,10 +18,12 @@ before_install:
 - "./sfdx/install"
 - export PATH=./sfdx/$(pwd):$PATH
 - sfdx --version
-- sfdx plugins --core
+- sfdx plugins --core 
+# $CONSUMERKEY and $USERNAME are stord in the Travis CI environment
 - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile assets/server.key
   --username $USERNAME --setdefaultdevhubusername -a HubOrg
 script:
+# Executes the Salesforce DX commands 
 - sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --wait
   2
 - sfdx force:org:display -u ciorg
