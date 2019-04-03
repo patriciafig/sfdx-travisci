@@ -24,6 +24,7 @@ before_install:
   --username $USERNAME --setdefaultdevhubusername -a HubOrg
 script:
 # Executes the Salesforce DX commands 
+# Indicates commands to create a temp scratch org, push source to the scratch org, run tests, delete the temp scratch org after the test run
 - sfdx force:org:create -v HubOrg -s -f config/project-scratch-def.json -a ciorg --wait
   2
 - sfdx force:org:display -u ciorg
